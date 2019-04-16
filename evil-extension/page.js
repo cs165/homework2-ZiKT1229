@@ -12,6 +12,22 @@ const MATCH_LIST = {
 
 function transformTextNodes(node) {
   // TODO(you): Implement this function! See HW spec for details.
+  const children = node.childNodes;
+  Array.from(children).forEach((child) => {
+    if (child.nodeName === "SCRIPT" || child.nodeName === "STYLE") return;
+    if (child.nodeType === Node.TEXT_NODE) {
+      const text = child.textContent;
+      const textArray = text.split(" ");
+      const newTextArray = textArray.map((text) => {
+        let returnValue = text;
+        if (MATCH_LIST.hasOwnProperty(text)) returnValue = MATCH_LIST[text];
+        return returnValue;
+      });
+      child.textContent = newTextArray.join(" ");
+    } else {
+      transformTextNodes(child);
+    }
+  });
 }
 
 transformTextNodes(document.body);
