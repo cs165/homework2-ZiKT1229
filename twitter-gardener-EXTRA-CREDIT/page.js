@@ -26,31 +26,35 @@ function onMessage(gardeningInProgress) {
 
   // If `gardeningInProgress` is true, that means "Start Gardening" was clicked.
   // If `gardeningInProgress` is false, that means "Stop Gardening" was clicked.
-  const tweets = document.getElementsByClassName('tweet');
-  const cursorUrl = chrome.runtime.getURL('images/rose-cursor.gif');
-  const backgroundUrl = chrome.runtime.getURL('images/sparkle.gif');
-  
-  if (gardeningInProgress) {
-    Array.from(tweets).forEach((tweet) => {
-      const tweetText = tweet.getElementsByClassName('tweet-text');
-      tweet.addEventListener('mouseover', () => {
-        tweet.style.cursor = `url(${cursorUrl}) 4 12, auto`;
-        tweet.style.background = `url(${backgroundUrl})`;
-        tweet.style.opacity='0.8';
-      });
-      tweet.addEventListener('mouseout', () => {
-        tweet.style.cursor = ``;
-        tweet.style.background = ``;
-        tweet.style.opacity='1';
-      });
-      tweet.addEventListener('click', (event) => {
-        event.stopPropagation();
-        tweetText[0].textContent = POSITIVE_MESSAGES[Math.floor(Math.random() * POSITIVE_MESSAGES.length)];
-      });
-    });
-  } else {
-
-  }
+  flag = gardeningInProgress;
 }
+
+let flag = false;
+const tweets = document.getElementsByClassName('tweet');
+const cursorUrl = chrome.runtime.getURL('images/rose-cursor.gif');
+const backgroundUrl = chrome.runtime.getURL('images/sparkle.gif');
+Array.from(tweets).forEach((tweet) => {
+  const tweetText = tweet.getElementsByClassName('tweet-text');
+  tweet.addEventListener('mouseenter', () => {
+    if (flag) {
+      tweet.style.cursor = `url(${cursorUrl}) 4 12, auto`;
+      tweet.style.background = `url(${backgroundUrl})`;
+      tweet.style.opacity='0.8';
+    }
+  });
+  tweet.addEventListener('mouseleave', () => {
+    if (flag) {
+      tweet.style.cursor = ``;
+      tweet.style.background = ``;
+      tweet.style.opacity= '';
+    }
+  });
+  tweet.addEventListener('click', (event) => {
+    if (flag) {
+      event.stopPropagation();
+      tweetText[0].textContent = POSITIVE_MESSAGES[Math.floor(Math.random() * POSITIVE_MESSAGES.length)];
+    }
+  });
+});
 
 console.log('twitter-gardener start');
